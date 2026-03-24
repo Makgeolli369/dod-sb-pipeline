@@ -1,0 +1,64 @@
+name: dbt CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dbt-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install dbt-bigquery sqlfluff sqlfluff-templater-dbt
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up dbt profiles
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << EOF
+          dod_sb_pipeline:
+            target: ci
+            outputs:
+              ci:
+                type: bigquery
+                method: service-account-json
+                project: dod-sb-pipeline
+                dataset: dbt_ci
+                keyfile_json: ${{ secrets.GCP_SA_KEY }}
+                threads: 4
+                timeout_seconds: 300
+          EOF
+
+      - name: Run sqlfluff lint
+        run: |
+          sqlfluff lint models/ --dialect bigquery --templater dbt
+
+      - name: dbt deps
+        run: dbt deps
+
+      - name: dbt build (CI - slim)
+        if: github.event_name == 'pull_request'
+        run: |
+          dbt build --select state:modified+ --defer --state ./target
+
+      - name: dbt build (full run on merge to main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: dbt build
