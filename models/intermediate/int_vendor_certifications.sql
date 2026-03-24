@@ -9,8 +9,13 @@ vendor_summary as (
 
         -- obligation totals
         sum(federal_action_obligation) as total_net_obligation,
-        sum(case when federal_action_obligation > 0 
-            then federal_action_obligation else 0 end) as total_gross_obligation,
+        sum(
+            case
+                when federal_action_obligation > 0
+                    then federal_action_obligation
+                else 0
+            end
+        ) as total_gross_obligation,
 
         -- transaction counts
         count(*) as total_transactions,
@@ -25,14 +30,16 @@ vendor_summary as (
         min(action_date_fiscal_year) as first_fiscal_year,
         max(action_date_fiscal_year) as last_fiscal_year,
 
-        -- most common set aside
-        approx_top_count(type_of_set_aside, 1)[offset(0)].value as primary_set_aside,
+        approx_top_count(type_of_set_aside, 1)[offset(0)].value
+            as primary_set_aside,
 
         -- most common agency
-        approx_top_count(awarding_agency_name, 1)[offset(0)].value as primary_agency,
+        approx_top_count(awarding_agency_name, 1)[offset(0)].value
+            as primary_agency,
 
         -- most common naics
-        approx_top_count(naics_code, 1)[offset(0)].value as primary_naics_code,
+        approx_top_count(naics_code, 1)[offset(0)].value
+            as primary_naics_code,
 
         -- competition profile
         avg(number_of_offers_received) as avg_offers_received,

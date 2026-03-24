@@ -25,17 +25,31 @@ net_obligations as (
         sum(federal_action_obligation) as net_obligation,
 
         -- gross obligated (positive only)
-        sum(case when federal_action_obligation > 0 
-            then federal_action_obligation else 0 end) as gross_obligation,
+        sum(
+            case
+                when federal_action_obligation > 0
+                    then federal_action_obligation
+                else 0
+            end
+        ) as gross_obligation,
 
         -- total de-obligated (negative only, stored as positive number)
-        sum(case when federal_action_obligation < 0 
-            then abs(federal_action_obligation) else 0 end) as total_deobligation,
+        sum(
+            case
+                when federal_action_obligation < 0
+                    then abs(federal_action_obligation)
+                else 0
+            end
+        ) as total_deobligation,
 
         -- transaction counts
         count(*) as transaction_count,
-        sum(case when is_deobligation then 1 else 0 end) as deobligation_count,
-        sum(case when is_base_award then 1 else 0 end) as base_award_count,
+        sum(
+            case when is_deobligation then 1 else 0 end
+        ) as deobligation_count,
+        sum(
+            case when is_base_award then 1 else 0 end
+        ) as base_award_count,
 
         -- competition
         max(number_of_offers_received) as max_offers_received,
