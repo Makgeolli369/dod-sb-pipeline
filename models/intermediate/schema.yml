@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: int_contract_net_obligations
+    description: "Net obligations per contract award aggregated by fiscal year, netting out de-obligations. Excludes shutdown period transactions."
+    columns:
+      - name: award_id_piid
+        description: "Procurement Instrument Identifier — the contract number."
+        tests:
+          - not_null
+      - name: action_date_fiscal_year
+        description: "Federal fiscal year of the contract action."
+        tests:
+          - not_null
+      - name: net_obligation
+        description: "Net dollar amount obligated after accounting for de-obligations."
+        tests:
+          - not_null
+      - name: recipient_uei
+        description: "Unique Entity Identifier for the vendor."
+      - name: awarding_agency_name
+        description: "Name of the awarding agency."
+        tests:
+          - not_null
+
+  - name: int_vendor_certifications
+    description: "Vendor-level summary of contract activity, certifications, and performance across all fiscal years."
+    columns:
+      - name: recipient_uei
+        description: "Unique Entity Identifier for the vendor."
+        tests:
+          - not_null
+          - unique
+      - name: recipient_name
+        description: "Legal name of the vendor."
+        tests:
+          - not_null
+      - name: total_net_obligation
+        description: "Total net obligation across all contracts and fiscal years."
+        tests:
+          - not_null
+      - name: total_awards
+        description: "Total number of distinct contract awards."
+        tests:
+          - not_null

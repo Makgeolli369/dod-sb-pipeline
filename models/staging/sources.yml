@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    database: dod-sb-pipeline
+    schema: raw
+    tables:
+      - name: contracts_fy2023
+      - name: contracts_fy2024
+      - name: contracts_fy2025
+      - name: contracts_fy2026
