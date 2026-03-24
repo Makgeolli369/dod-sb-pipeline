@@ -7,7 +7,7 @@ vendor_certs as (
 ),
 
 vendor_performance as (
-    select
+    select  -- noqa: ST06
         n.recipient_uei,
         n.recipient_name,
         n.action_date_fiscal_year,
@@ -48,7 +48,7 @@ vendor_performance as (
             as has_partial_year
 
     from net_obligations as n
-    left join vendor_certs v
+    left join vendor_certs as v
         on n.recipient_uei = v.recipient_uei
     group by
         n.recipient_uei,

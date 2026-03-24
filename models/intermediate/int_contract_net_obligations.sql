@@ -21,7 +21,7 @@ net_obligations as (
         fy_status,
         action_date_fiscal_year,
 
-        -- net obligation = sum of all transactions (base + modifications + de-oblig)
+        -- net obligation = sum of all transactions
         sum(federal_action_obligation) as net_obligation,
 
         -- gross obligated (positive only)
