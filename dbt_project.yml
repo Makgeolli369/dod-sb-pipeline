@@ -2,7 +2,7 @@ name: 'dod_sb_pipeline'
 version: '1.0.0'
 config-version: 2
 
-profile: 'default'
+profile: 'dod_sb_pipeline'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
