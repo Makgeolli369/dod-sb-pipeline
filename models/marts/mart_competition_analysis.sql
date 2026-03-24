@@ -29,10 +29,20 @@ competition_analysis as (
         sum(deobligation_count) as total_deobligations,
 
         -- single vs multiple offer breakdown
-        sum(case when max_offers_received = 1 
-            then 1 else 0 end) as single_offer_awards,
-        sum(case when max_offers_received > 1 
-            then 1 else 0 end) as multiple_offer_awards,
+        sum(
+            case
+                when max_offers_received = 1
+                    then 1
+                else 0
+            end
+        ) as single_offer_awards,
+        sum(
+            case
+                when max_offers_received > 1
+                    then 1
+                else 0
+            end
+        ) as multiple_offer_awards,
 
         -- data quality
         max(case when fy_exclude_from_yoy then 1 else 0 end) as has_excluded_fy,

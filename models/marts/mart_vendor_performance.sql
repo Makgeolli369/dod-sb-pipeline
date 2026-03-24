@@ -18,6 +18,11 @@ vendor_performance as (
         n.naics_code,
         n.naics_description,
         n.primary_place_of_performance_state_code,
+        v.fiscal_years_active,
+        v.distinct_agencies,
+        v.primary_set_aside,
+        v.primary_agency,
+        v.primary_naics_code,
 
         -- obligations
         sum(n.net_obligation) as total_net_obligation,
@@ -35,17 +40,14 @@ vendor_performance as (
         -- vendor profile from certifications model
         v.total_awards as vendor_lifetime_awards,
         v.total_net_obligation as vendor_lifetime_obligation,
-        v.fiscal_years_active,
-        v.distinct_agencies,
-        v.primary_set_aside,
-        v.primary_agency,
-        v.primary_naics_code,
 
         -- data quality
-        max(case when n.fy_exclude_from_yoy then 1 else 0 end) as has_excluded_fy,
-        max(case when n.fy_is_partial_year then 1 else 0 end) as has_partial_year
+        max(case when n.fy_exclude_from_yoy then 1 else 0 end)
+            as has_excluded_fy,
+        max(case when n.fy_is_partial_year then 1 else 0 end)
+            as has_partial_year
 
-    from net_obligations n
+    from net_obligations as n
     left join vendor_certs v
         on n.recipient_uei = v.recipient_uei
     group by
