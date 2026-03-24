@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_contracts
+    description: "Cleaned and unioned DoD small business contract transactions from USAspending.gov covering FY2023-FY2026."
+    columns:
+      - name: contract_transaction_unique_key
+        description: "Unique identifier for each contract transaction."
+        tests:
+          - not_null
+      - name: award_id_piid
+        description: "Procurement Instrument Identifier — the contract number."
+        tests:
+          - not_null
+      - name: action_date
+        description: "Date the contract action was taken."
+        tests:
+          - not_null
+      - name: action_date_fiscal_year
+        description: "Federal fiscal year of the action date."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [2023, 2024, 2025, 2026]
+      - name: federal_action_obligation
+        description: "Dollar amount obligated or de-obligated on this transaction."
+        tests:
+          - not_null
+      - name: recipient_uei
+        description: "Unique Entity Identifier for the vendor."
+      - name: is_deobligation
+        description: "True if this transaction reduces the obligated amount."
+        tests:
+          - not_null
+      - name: is_shutdown_period
+        description: "True if action occurred during the FY2026 government shutdown period."
+        tests:
+          - not_null
